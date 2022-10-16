@@ -1,35 +1,41 @@
-import { useState } from "react"
-import { v4 as uuid } from 'uuid';
-const TodoForm = ( { addTodo } ) => {
-    const [todo, setTodo] = useState({
-        id: '',
-        task: '', 
-        completed: false
-    })
+import { Button, TextField } from "@material-ui/core"
+import React, { useState } from "react"
+import { v4 as uuid } from 'uuid'
 
-    function handleTaskInput(e) {
-        setTodo({ ...todo, task: e.target.value })
+function TodoForm({ addTodo }) {
+  const [todo, setTodo] = useState({
+    id: "",
+    task: "",
+    completed: false
+  });
+
+  function handleTaskInputChange(e) {
+    // e.target.value contains new input from onChange
+    // event for input elements
+    setTodo({ ...todo, task: e.target.value });
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault(); // prevents browser refresh
+    // trim() gets rid of string whitespace
+    if (todo.task.trim()) {
+      addTodo({ ...todo, id: uuid.v4() });
+      setTodo({ ...todo, task: "" });
     }
+  }
 
-    function handleSubmit(e) {
-        e.preventDefault()
-        if (todo.task.trim()) {
-            addTodo({ ...todo, id: uuid.v4()})
-            //resetting it again to empty string
-            setTodo({...todo, task: '' })
-        }
-    }
-
-    return (
-        <form onSubmit = { handleSubmit }>
-            <input
-            name = "task"
-            type = 'text' 
-            value = { todo.task }
-            onChange = { handleTaskInput } />
-            <button />
-        </form>
-    )
+  return (
+    <form className="todo-form" onSubmit={handleSubmit}>
+      <TextField
+        label="Task"
+        type="text"
+        name="task"
+        value={todo.task}
+        onChange={handleTaskInputChange}
+      />
+      <Button type="submit">Submit</Button>
+    </form>
+  );
 }
 
-export default TodoForm
+export default TodoForm;
